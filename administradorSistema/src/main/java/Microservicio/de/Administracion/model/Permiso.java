@@ -11,27 +11,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "Permiso")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Permiso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_usuario;
+    private Integer id_permiso;
 
-    @Column(unique  = false, length = 100, nullable = false)
+    @Column
     private String nombre;
 
-    @Column(unique  = false, length = 100, nullable = false)
-    private String password;
-    
-    @Column(unique  = true, length = 100, nullable = false)
-    private String email;
-    
     @Column
-    private Integer rol;
+    private String descripcion;
 
-    @Column 
-    private boolean activo;
+    
 }
