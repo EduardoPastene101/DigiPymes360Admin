@@ -1,0 +1,9 @@
+{
+  "nombre": "Juan Perez",
+  "password": "claveSegura123",
+  "email": "juan.perez@example.com",
+  "rol": 1,
+  "activo": true
+}
+
+http://localhost:8080/swagger-ui/index.html#/
