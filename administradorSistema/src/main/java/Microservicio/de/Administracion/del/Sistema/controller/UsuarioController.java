@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/Usuario/")
-public class MainController {
+public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
@@ -29,8 +29,14 @@ public class MainController {
     @GetMapping("/get/{id}")
     @Operation(summary = "obtiene usuario por id.")
     public String getById(@PathVariable Long id) {
+        String str = "";
 
-        return this.usuarioService.obtenerPorId(id).toString();
+        if (this.usuarioService.obtenerPorId(id).isEmpty()){
+            str = "No hay coincidencias";
+        }else{
+            str = this.usuarioService.obtenerPorId(id).toString();
+        }
+        return str;
     }
 
     @PutMapping("/put/{id}")

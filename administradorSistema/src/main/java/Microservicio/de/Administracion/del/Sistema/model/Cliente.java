@@ -1,13 +1,15 @@
 package Microservicio.de.Administracion.del.Sistema.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "Cliente")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 
 public class Cliente {
     @Id
@@ -23,16 +25,6 @@ public class Cliente {
     
     @Column
     private String telefono;
-
-    public Cliente() {
-    }
-
-    public Cliente(Integer id_cliente, Usuario id_usuario, String direccion, String telefono) {
-        this.id_cliente = id_cliente;
-        this.id_usuario = id_usuario;
-        this.direccion = direccion;
-        this.telefono = telefono;
-    }
 
     public Integer getId_cliente() {
         return id_cliente;
