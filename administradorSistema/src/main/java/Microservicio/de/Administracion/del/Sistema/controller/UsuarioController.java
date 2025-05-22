@@ -34,7 +34,7 @@ public class UsuarioController {
         if (this.usuarioService.obtenerPorId(id).isEmpty()){
             str = "No hay coincidencias";
         }else{
-            str = this.usuarioService.obtenerPorId(id).toString();
+            str = this.usuarioService.obtenerPorId(id).get().toString();
         }
         return str;
     }

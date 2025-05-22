@@ -25,6 +25,7 @@ public class UsuarioService {
     }
 
     public String crearUsuario(Usuario u){
+        u.setRol(3);
         usuarioRepo.save(u);
         return "Usuario creado";
     }
