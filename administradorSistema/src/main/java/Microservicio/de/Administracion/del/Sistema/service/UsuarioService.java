@@ -110,7 +110,7 @@ public class UsuarioService {
         if (check_admin.isPresent()
                 && admin.getPassword().equals(check_admin.get().getPassword())
                 && admin.getEmail().equals(check_admin.get().getEmail())
-                && admin.getRol()==0) {
+                && check_admin.get().getRol()==0) {
 
             Usuario usuarioEncontrado = usuarioRepo.findById(id).get();
 
