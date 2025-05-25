@@ -37,28 +37,26 @@ public class UsuarioController {
     @PutMapping("/put")
     @Operation(summary = "Modifica usuarios.")
     public String modificarUsuario(@RequestParam Long id,@RequestBody Usuario usuario, @RequestParam String nueva_password, @RequestParam String nuevo_email) {
-        this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email);
-        return "Datos actualizados correctamente.";
+        return this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email);
+
     }
 
     @PutMapping("/deactivate")
     @Operation(summary = "Desactiva usuarios.")
     public String modificarUsuarioActivarDesactivar(@RequestParam Long id,@RequestParam Long id_admin,@RequestBody Usuario usuario, @RequestParam boolean activar) {
-        this.usuarioService.actualizarActivarDesactivar(id,id_admin,usuario,activar);
-        return "Datos actualizados correctamente.";
+        return this.usuarioService.actualizarActivarDesactivar(id,id_admin,usuario,activar);
     }
 
     @DeleteMapping("/del")
     @Operation(summary = "Elimina usuarios.")
     public String eliminarUsuario(@RequestParam Long id, @RequestParam Long id_admin, @RequestBody Usuario admin) {
-        this.usuarioService.eliminarUsuario(id,id_admin, admin);
-        return "Datos eliminados correctamente.";
+        return this.usuarioService.eliminarUsuario(id,id_admin, admin);
     }
 
     @DeleteMapping("/delself")
     @Operation(summary = "Elimina usuario cuando el usuario quiera eliminarse.")
     public String eliminarUsuarioVoluntariamente(@RequestParam Long id, @RequestBody Usuario usuario) {
-        this.usuarioService.eliminarVoluntariamente(id,usuario);
-        return "Datos eliminados correctamente.";
+        return this.usuarioService.eliminarVoluntariamente(id,usuario);
+
     }
 }

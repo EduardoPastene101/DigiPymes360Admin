@@ -134,15 +134,18 @@ public class UsuarioService {
 
 
     public String actualizar(Long id, Usuario datos, String nueva_password,String nuevo_email) {
+        String str = "No se pudo actualizar.";
         Usuario usuario = usuarioRepo.findById(id).get();
         if (usuario.getPassword().equals(datos.getPassword())
-                && usuario.getEmail().equals(datos.getEmail())) {
+                && usuario.getEmail().equals(datos.getEmail())
+                && usuario.isActivo()) {
             usuario.setPassword(nueva_password);
             usuario.setEmail(nuevo_email);
             usuario.setNombre(datos.getNombre());
             usuarioRepo.save(usuario);
+            str = "Usuario actualizado.";
         }
-        return "Usuario actualizado.";
+        return str;
     }
 
     public String actualizarActivarDesactivar(Long id,Long id_admin, Usuario datos, boolean activar) {
