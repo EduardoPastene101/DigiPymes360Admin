@@ -13,14 +13,15 @@ public class AdminService {
     private final IUsuarioRepository UsuarioRepo;
 
 
-    public String cambiarPermisos(Long id_admin, Usuario admin, Long id_cliente, Integer rol) {
+    public String cambiarPermisos(Long id_admin, Usuario admin, Long id_usuario, Integer rol) {
         String str;
 
         Optional<Usuario> usuario_admin = UsuarioRepo.findById(id_admin);
 
-        if (admin.getPassword().equals(usuario_admin.get().getPassword())
-                && admin.getRol().equals(0)){
-                Usuario usuario_a_modificar = UsuarioRepo.findById(id_cliente).get();
+        if (admin.getEmail().equals(usuario_admin.get().getEmail())
+                && admin.getPassword().equals(usuario_admin.get().getPassword())
+                && usuario_admin.get().getRol().equals(0)){
+                Usuario usuario_a_modificar = UsuarioRepo.findById(id_usuario).get();
                 usuario_a_modificar.setRol(rol);
                 UsuarioRepo.save(usuario_a_modificar);
 

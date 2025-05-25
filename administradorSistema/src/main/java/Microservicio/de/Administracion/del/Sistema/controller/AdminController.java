@@ -14,9 +14,9 @@ public class AdminController {
 
     @PutMapping("/put")
     @Operation(summary = "Modifica rol de usuario.")
-    public String modificarUsuario(@RequestParam Long id_admin,@RequestBody Usuario admin,@RequestParam Long id_cliente, @RequestParam Integer rol) {
+    public String modificarUsuario(@RequestParam Long id_admin,@RequestBody Usuario admin,@RequestParam Long id_usuario, @RequestParam Integer rol) {
 
-        return this.adminService.cambiarPermisos(id_admin,admin,id_cliente,rol);
+        return this.adminService.cambiarPermisos(id_admin,admin,id_usuario,rol);
     }
 
 }
