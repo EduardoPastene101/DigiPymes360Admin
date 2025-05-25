@@ -12,7 +12,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @PutMapping("/put/{id}")
+    @PutMapping("/put")
     @Operation(summary = "Modifica rol de usuario.")
     public String modificarUsuario(@RequestParam Long id_admin,@RequestBody Usuario admin,@RequestParam Long id_cliente, @RequestParam Integer rol) {
 

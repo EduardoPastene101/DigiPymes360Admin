@@ -1,9 +1,7 @@
 package Microservicio.de.Administracion.del.Sistema.model;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
 @Entity
 @Table(name = "Usuario")
 @Data
@@ -11,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
