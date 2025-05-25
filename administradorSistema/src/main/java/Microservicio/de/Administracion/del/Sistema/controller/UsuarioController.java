@@ -41,6 +41,13 @@ public class UsuarioController {
         return "Datos actualizados correctamente.";
     }
 
+    @PutMapping("/deactivate")
+    @Operation(summary = "Desactiva usuarios.")
+    public String modificarUsuarioActivarDesactivar(@RequestParam Long id,@RequestParam Long id_admin,@RequestBody Usuario usuario, @RequestParam boolean activar) {
+        this.usuarioService.actualizarActivarDesactivar(id,id_admin,usuario,activar);
+        return "Datos actualizados correctamente.";
+    }
+
     @DeleteMapping("/del")
     @Operation(summary = "Elimina usuarios.")
     public String eliminarUsuario(@RequestParam Long id, @RequestParam Long id_admin, @RequestBody Usuario admin) {

@@ -145,4 +145,17 @@ public class UsuarioService {
         return "Usuario actualizado.";
     }
 
+    public String actualizarActivarDesactivar(Long id,Long id_admin, Usuario datos, boolean activar) {
+        Usuario usuario = usuarioRepo.findById(id).get();
+        Usuario admin = usuarioRepo.findById(id_admin).get();
+
+        if (admin.getPassword().equals(datos.getPassword())
+                && admin.getEmail().equals(datos.getEmail())
+                && admin.getRol()==0) {
+            usuario.setActivo(activar);
+            usuarioRepo.save(usuario);
+        }
+        return "Usuario actualizado.";
+    }
+
 }
