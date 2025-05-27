@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+
 public class AdminService {
     private final IUsuarioRepository UsuarioRepo;
 
+    public AdminService(IUsuarioRepository usuarioRepo) {
+        UsuarioRepo = usuarioRepo;
+    }
 
     public String cambiarPermisos(Long id_admin, Usuario admin, Long id_usuario, Integer rol) {
         String str;

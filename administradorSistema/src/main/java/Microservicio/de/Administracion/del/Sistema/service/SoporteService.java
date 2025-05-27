@@ -13,10 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+
 public class SoporteService {
     private final ISoporteRepository SoporteRepo;
     private final IClienteRepository clienteRepo;
+
+    public SoporteService(ISoporteRepository soporteRepo, IClienteRepository clienteRepo) {
+        SoporteRepo = soporteRepo;
+        this.clienteRepo = clienteRepo;
+    }
 
     public List<Soporte> getTickets() {
         return SoporteRepo.findAll();

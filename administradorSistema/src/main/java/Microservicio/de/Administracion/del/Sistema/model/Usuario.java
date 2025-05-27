@@ -33,4 +33,51 @@ public class Usuario {
     private boolean activo;
 
 
+    public void setId_usuario(Integer id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    public void setNombre(@NotBlank(message = "El nombre es obligatorio") String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setPassword(@NotBlank(message = "La clave es obligatoria") String password) {
+        this.password = password;
+    }
+
+    public void setEmail(@NotBlank(message = "El email es obligatorio") String email) {
+        this.email = email;
+    }
+
+    public void setRol(Integer rol) {
+        this.rol = rol;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public Integer getId_usuario() {
+        return id_usuario;
+    }
+
+    public @NotBlank(message = "El nombre es obligatorio") String getNombre() {
+        return nombre;
+    }
+
+    public @NotBlank(message = "La clave es obligatoria") String getPassword() {
+        return password;
+    }
+
+    public @NotBlank(message = "El email es obligatorio") String getEmail() {
+        return email;
+    }
+
+    public Integer getRol() {
+        return rol;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
 }
