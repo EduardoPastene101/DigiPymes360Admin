@@ -17,7 +17,7 @@ public class Soporte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_soporte;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_usuario")
     private Cliente id_cliente;
 
@@ -68,5 +68,16 @@ public class Soporte {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    @Override
+    public String toString() {
+        return "Soporte{" +
+                "id_soporte=" + id_soporte +
+                ", id_cliente=" + id_cliente +
+                ", mensaje='" + mensaje + '\'' +
+                ", estado='" + estado + '\'' +
+                ", fecha=" + fecha +
+                '}';
     }
 }

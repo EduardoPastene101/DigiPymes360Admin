@@ -16,7 +16,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_cliente;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private Usuario id_usuario;
 
@@ -56,5 +56,15 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id_cliente=" + id_cliente +
+                ", id_usuario=" + id_usuario +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                '}';
     }
 }

@@ -1,5 +1,8 @@
-package Microservicio.de.Administracion.del.Sistema;
+//Descomentar si es necesario rellenar una base de datos.
 
+
+package Microservicio.de.Administracion.del.Sistema;
+/*
 import Microservicio.de.Administracion.del.Sistema.model.Cliente;
 import Microservicio.de.Administracion.del.Sistema.model.Soporte;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
@@ -17,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -55,19 +57,20 @@ public class DataLoader implements CommandLineRunner {
             }else{
                 usuario.setActivo(true);
             }
+
             usuario.setNombre(faker.name().fullName());
             usuario.setEmail(faker.internet().emailAddress());
             usuario.setRol(i%4);
             usuario.setPassword(faker.internet().password(10,15));
 
-            usuarioRepository.save(usuario);
+            usuario = usuarioRepository.save(usuario);
 
             if (i%4==3) {//Cuando el rol es cliente
                 Cliente cliente = new Cliente();
                 cliente.setDireccion(faker.address().city());
                 cliente.setTelefono(faker.phoneNumber().phoneNumber());
                 cliente.setId_usuario(usuario);
-                clienteRepository.save(cliente);
+                cliente = clienteRepository.save(cliente);
 
                 Soporte soporte = new Soporte();
                 soporte.setId_cliente(cliente);
@@ -84,10 +87,12 @@ public class DataLoader implements CommandLineRunner {
 
                 Date fechaGenerada = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 soporte.setFecha(fechaGenerada);
-                soporte.setMensaje("Mensaje: "+random.nextInt(0,999999));//Genera un mensaje con numero al azar
+                soporte.setMensaje("Mensaje "+random.nextInt(0,999999));//Genera un mensaje con numero al azar
+                soporteRepository.save(soporte);
             }
 
         }
 
     }
 }
+//*/

@@ -80,4 +80,16 @@ public class Usuario {
     public boolean isActivo() {
         return activo;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id_usuario=" + id_usuario +
+                ", nombre='" + nombre + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", rol=" + rol +
+                ", activo=" + activo +
+                '}';
+    }
 }
