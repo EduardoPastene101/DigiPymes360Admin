@@ -65,4 +65,29 @@ public class UsuarioServiceTest {
 
     }
 
+    @Test
+    public void testEliminar() {
+        Long id = 30L;
+
+        // Mock del usuario a eliminar
+        Usuario usuario = new Usuario();
+        usuario.setId_usuario(id.intValue()); // importante
+        usuario.setActivo(true);
+        usuario.setNombre("Juan Pérez");
+        usuario.setEmail("juan@example.com");
+        usuario.setRol(3);
+        usuario.setPassword("123456");
+
+        when(usuarioRepository.findById(id)).thenReturn(Optional.of(usuario)); // mock correcto
+
+        usuarioRepository.deleteById(id);
+        String eliminacion = usuarioService.eliminarVoluntariamente(id, usuario);
+
+        // Verifica que se llamó a deleteById correctamente
+        verify(usuarioRepository, times(1)).deleteById(id);
+
+    }
+
+
+
 }

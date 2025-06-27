@@ -79,9 +79,12 @@ public class UsuarioService {
 
         Optional<Usuario> usuario_get = usuarioRepo.findById(id);
 
+
+
         if (usuario_get.isPresent()
                 && usuario.getPassword().equals(usuario_get.get().getPassword())
-                && usuario.getEmail().equals(usuario_get.get().getEmail())) {
+                && usuario.getEmail().equals(usuario_get.get().getEmail()) &&
+                usuario_get.get().getId_usuario().equals(usuario.getId_usuario())) {
 
             Usuario usuarioEncontrado = usuario_get.get();
 
