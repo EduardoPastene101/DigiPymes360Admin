@@ -8,6 +8,7 @@ import Microservicio.de.Administracion.del.Sistema.repository.ISoporteRepository
 import Microservicio.de.Administracion.del.Sistema.repository.IUsuarioRepository;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,12 +18,12 @@ import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class SoporteServiceTest {
-    @Autowired
+    @InjectMocks
     private SoporteService soporteService;
 
     Random random = new Random();
@@ -37,7 +38,7 @@ public class SoporteServiceTest {
     @Mock
     private IUsuarioRepository usuarioRepo;
 
-    Faker faker = new Faker();
+    //Faker faker = new Faker();
 
     @Test
     public void testgetAllSoportes(){
@@ -48,23 +49,28 @@ public class SoporteServiceTest {
     }
 
 
-
     @Test
     public void testCrearTicket() {
         estado.clear();
-        Long id_usuario = 20L;
 
+        // Supón que el cliente tiene ID 20
+        Long id_prueba = 20L;
+        Integer id_prueba_int = id_prueba.intValue();
+
+        // Usuario asociado al cliente
         Usuario usuario = new Usuario();
-        usuario.setId_usuario(1234);
+        usuario.setId_usuario(id_prueba_int);
 
+        // Cliente con ID del usuario
         Cliente cliente = new Cliente();
         cliente.setId_cliente(usuario.getId_usuario());
 
-        // Mocks con anyLong()
-        when(usuarioRepo.findById(anyLong())).thenReturn(Optional.of(usuario));
-        when(clienteRepo.findById(anyLong())).thenReturn(Optional.of(cliente));
+        // Mock: cuando busque el usuario por ID de cliente, devuelve el usuario
+        when(usuarioRepo.findById(id_prueba)).thenReturn(Optional.of(usuario));
+        // Mock: cuando busque el cliente por ID de usuario, devuelve el cliente
+        when(clienteRepo.findById(id_prueba)).thenReturn(Optional.of(cliente));
 
-        // Resto igual
+        // Estados
         estado.add("Resuelto");
         estado.add("No resuelto");
         estado.add("En revisión");
@@ -89,11 +95,22 @@ public class SoporteServiceTest {
         soporte.setFecha(fechaGenerada);
         soporte.setMensaje("Mensaje " + random.nextInt(0,999999));
 
-        String soporte_creado = soporteService.crearTicket(id_usuario, soporte);
+        // Ejecución
+        String soporte_creado;
+        soporte_creado = soporteService.crearTicket(id_prueba, soporte);
 
         assertNotNull(soporte_creado);
         assertTrue(soporte_creado.contains("Ticket creado"), soporte_creado);
     }
 
+    @Test
+    public void testSolucionarTicket(){
+        Long id_prueba = 20L;
+        Integer id_prueba_int = id_prueba.intValue();
+        String eliminacion = soporteService.solucionarTicket(id_prueba);
 
+        // Verifica que se llamó a deleteById correctamente
+        verify(soporteRepository, times(1)).deleteById(id_prueba);
+
+    }
 }
