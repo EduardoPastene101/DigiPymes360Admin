@@ -27,17 +27,21 @@ public class SoporteService {
         return SoporteRepo.findAll();
     }
 
-    public String crearTicket(Long id_cliente, Soporte ticket) {
+    public Soporte crearTicket(Long id_cliente, Soporte ticket) {
         Cliente cliente = clienteRepo.findById(id_cliente).get();
 
         ticket.setId_cliente(cliente);
         SoporteRepo.save(ticket);
-        return "Ticket creado";
+        return ticket;
     }
 
 
     public String solucionarTicket( Long id) {
         SoporteRepo.deleteById(id);
         return "Ticket eliminado";
+    }
+
+    public Soporte obtenerTicket(Long id){
+        return SoporteRepo.findById(id).get();
     }
 }

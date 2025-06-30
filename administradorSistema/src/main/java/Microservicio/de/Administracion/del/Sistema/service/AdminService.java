@@ -16,10 +16,11 @@ public class AdminService {
         UsuarioRepo = usuarioRepo;
     }
 
-    public String cambiarPermisos(Long id_admin, Usuario admin, Long id_usuario, Integer rol) {
+    public Usuario cambiarPermisos(Long id_admin, Usuario admin, Long id_usuario, Integer rol) {
         String str;
 
         Optional<Usuario> usuario_admin = UsuarioRepo.findById(id_admin);
+        Usuario u;
 
         if (admin.getEmail().equals(usuario_admin.get().getEmail())
                 && admin.getPassword().equals(usuario_admin.get().getPassword())
@@ -28,12 +29,12 @@ public class AdminService {
                 usuario_a_modificar.setRol(rol);
                 UsuarioRepo.save(usuario_a_modificar);
 
-                str = "Rol cambiado satisfactoriamente";
+                u = usuario_a_modificar;
 
         }else{
-            str = "Permiso denegado.";
+            u= new Usuario();
         }
-        return str;
+        return u;
     }
 
 }

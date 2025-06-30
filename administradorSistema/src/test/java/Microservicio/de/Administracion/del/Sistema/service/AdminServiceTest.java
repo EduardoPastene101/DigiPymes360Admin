@@ -47,11 +47,11 @@ public class AdminServiceTest {
         when(usuarioRepo.findById(idAdmin)).thenReturn(Optional.of(admin));
         when(usuarioRepo.findById(idUsuario)).thenReturn(Optional.of(usuario));
 
-        String resultado = adminService.cambiarPermisos(idAdmin, admin, idUsuario, nuevoRol);
+        Usuario resultado = adminService.cambiarPermisos(idAdmin, admin, idUsuario, nuevoRol);
 
         // Assert
         assertNotNull(resultado);
-        assertEquals("Rol cambiado satisfactoriamente", resultado);
+        assertEquals(usuario, resultado);
         assertEquals(nuevoRol, usuario.getRol());
 
         // Verifica que se haya guardado el usuario

@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+import Microservicio.de.Administracion.del.Sistema.assembler.UsuarioModelAssembler;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
 import Microservicio.de.Administracion.del.Sistema.service.AdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,9 @@ public class AdminControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private UsuarioModelAssembler assembler;
+
     private Usuario admin;
 
     @BeforeEach
@@ -46,7 +50,7 @@ public class AdminControllerTest {
         Integer nuevoRol = 3;
 
         // Ejecutar petición
-        mockMvc.perform(put("/api/v1/admin/put")
+        mockMvc.perform(put("/api/v2/admin/put")
                         .param("id_admin", "1")
                         .param("id_usuario", "5")
                         .param("rol", "3")

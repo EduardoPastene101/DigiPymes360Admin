@@ -1,62 +1,89 @@
 package Microservicio.de.Administracion.del.Sistema.controller;
 
-import Microservicio.de.Administracion.del.Sistema.model.Cliente;
+import Microservicio.de.Administracion.del.Sistema.assembler.UsuarioModelAssembler;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
 import Microservicio.de.Administracion.del.Sistema.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/v1/user/")
+@RequestMapping("/api/v2/user/")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/add")
+    @Autowired
+    private UsuarioModelAssembler assembler;
+
+    @PostMapping(value = "/add",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Añade usuario.")
-    public String addUsuario(@RequestBody Usuario usuario,@RequestParam String direccion, @RequestParam String telefono) {
-        return this.usuarioService.crearUsuario(usuario,direccion,telefono);
+    public ResponseEntity<EntityModel<Usuario>> addUsuario(@RequestBody Usuario usuario, @RequestParam String direccion, @RequestParam String telefono) {
+
+        Usuario usuarioGuardado = this.usuarioService.crearUsuario(usuario,direccion,telefono);
+        return ResponseEntity
+                .created(linkTo(methodOn(UsuarioController.class).getById(usuario.getId_usuario().longValue())).toUri())
+                .body(assembler.toModel(usuarioGuardado));
     }
 
-    @GetMapping("/get")
+    @GetMapping(value = "/get",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Obtiene usuarios.")
-    public List<Usuario> getUsuarios() {
-        return usuarioService.findAll();
+    public CollectionModel<EntityModel<Usuario>> getUsuarios() {
+        //return usuarioService.findAll();
+
+        List<EntityModel<Usuario>> carreras = usuarioService.findAll().stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(carreras,
+                linkTo(methodOn(UsuarioController.class).getUsuarios()).withSelfRel());
     }
 
-    @GetMapping("/getbyid")
+    @GetMapping(value = "/getbyid",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "obtiene usuario por id.")
-    public String getById(@RequestParam Long id) {
+    public EntityModel<Usuario> getById(@RequestParam Long id) {
 
-        return this.usuarioService.obtenerPorId(id);
+        Usuario u = this.usuarioService.obtenerPorId(id);
+        return assembler.toModel(u);
     }
 
-    @PutMapping("/put")
+    @PutMapping(value = "/put",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Modifica usuarios.")
-    public String modificarUsuario(@RequestParam Long id,@RequestBody Usuario usuario, @RequestParam String nueva_password, @RequestParam String nuevo_email) {
-        return this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email);
-
+    public ResponseEntity<EntityModel<Usuario>> modificarUsuario(@RequestParam Long id,@RequestBody Usuario usuario, @RequestParam String nueva_password, @RequestParam String nuevo_email) {
+        Usuario usuarioRet= this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email);
+        return ResponseEntity
+                .ok(assembler.toModel(usuarioRet));
     }
 
-    @PutMapping("/deactivate")
+    @PutMapping(value = "/deactivate",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Desactiva usuarios.")
-    public String modificarUsuarioActivarDesactivar(@RequestParam Long id,@RequestParam Long id_admin,@RequestBody Usuario usuario, @RequestParam boolean activar) {
-        return this.usuarioService.actualizarActivarDesactivar(id,id_admin,usuario,activar);
+    public ResponseEntity<EntityModel<Usuario>> modificarUsuarioActivarDesactivar(@RequestParam Long id,@RequestParam Long id_admin,@RequestBody Usuario usuario, @RequestParam boolean activar) {
+        Usuario usuarioRet = this.usuarioService.actualizarActivarDesactivar(id,id_admin,usuario,activar);
+        return ResponseEntity.ok(assembler.toModel(usuarioRet));
     }
 
-    @DeleteMapping("/del")
+    @DeleteMapping(value = "/del",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Elimina usuarios.")
-    public String eliminarUsuario(@RequestParam Long id, @RequestParam Long id_admin, @RequestBody Usuario admin) {
-        return this.usuarioService.eliminarUsuario(id,id_admin, admin);
+    public ResponseEntity<?> eliminarUsuario(@RequestParam Long id, @RequestParam Long id_admin, @RequestBody Usuario admin) {
+        this.usuarioService.eliminarUsuario(id,id_admin, admin);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delself")
+    @DeleteMapping(value = "/delself",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Elimina usuario cuando el usuario quiera eliminarse.")
-    public String eliminarUsuarioVoluntariamente(@RequestParam Long id, @RequestBody Usuario usuario) {
-        return this.usuarioService.eliminarVoluntariamente(id,usuario);
+    public ResponseEntity<?> eliminarUsuarioVoluntariamente(@RequestParam Long id, @RequestBody Usuario usuario) {
+        this.usuarioService.eliminarVoluntariamente(id,usuario);
+        return ResponseEntity.noContent().build();
 
     }
 }

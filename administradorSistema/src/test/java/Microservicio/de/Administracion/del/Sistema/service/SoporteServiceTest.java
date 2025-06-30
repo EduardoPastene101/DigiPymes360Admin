@@ -96,11 +96,11 @@ public class SoporteServiceTest {
         soporte.setMensaje("Mensaje " + random.nextInt(0,999999));
 
         // Ejecución
-        String soporte_creado;
+        Soporte soporte_creado;
         soporte_creado = soporteService.crearTicket(id_prueba, soporte);
 
         assertNotNull(soporte_creado);
-        assertTrue(soporte_creado.contains("Ticket creado"), soporte_creado);
+        assertEquals(soporte, soporte_creado);
     }
 
     @Test

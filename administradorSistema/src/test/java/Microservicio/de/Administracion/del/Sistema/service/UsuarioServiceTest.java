@@ -36,9 +36,9 @@ public class UsuarioServiceTest {
         Long id = 20L;
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(new Usuario()));
 
-        String usuario_obtenido = usuarioService.obtenerPorId(id);
+        Usuario usuario_obtenido = usuarioService.obtenerPorId(id);
         assertNotNull(usuario_obtenido);
-        assertTrue(usuario_obtenido.contains("Usuario"));
+        assertTrue(usuario_obtenido.toString().contains("Usuario"));
 
     }
 
@@ -59,9 +59,9 @@ public class UsuarioServiceTest {
 
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
-        String usuario_creado = usuarioService.crearUsuario(usuario,"direccion","123");//Datos de ingreso de usuario ficticios
+        Usuario usuario_creado = usuarioService.crearUsuario(usuario,"direccion","123");//Datos de ingreso de usuario ficticios
         assertNotNull(usuario_creado);
-        assertTrue(usuario_creado.contains("Usuario creado correctamente."),usuario_creado);
+        assertEquals(usuario,usuario_creado);
 
     }
 

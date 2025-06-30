@@ -36,19 +36,18 @@ public class UsuarioService {
 
     }
 
-    public String obtenerPorId(Long id) {
+    public Usuario obtenerPorId(Long id) {
         String ret = "Permiso denegado.";
         Usuario u = usuarioRepo.findById(id).get();
         u.setPassword("");
         u.setEmail("");
-        ret = u.toString();
+        //ret = u.toString();
 
-        return ret;
+        return u;
 
     }
 
-    public String crearUsuario(Usuario u, String direccion, String telefono) {
-        try {
+    public Usuario crearUsuario(Usuario u, String direccion, String telefono) {
             if (!usuarioRepo.findAll().isEmpty()) {
                 u.setRol(3); // cliente por defecto (Después se puede modificar)
             } else {
@@ -66,12 +65,7 @@ public class UsuarioService {
                 clienteRepo.save(cliente);
             }
 
-            return "Usuario creado correctamente.";
-        } catch (DataIntegrityViolationException e) {
-            return "Error: Email ya registrado u otra restricción violada.";
-        } catch (Exception e) {
-            return "Error inesperado: " + e.getMessage();
-        }
+            return u;
     }
 
     public String eliminarVoluntariamente(Long id, Usuario usuario) {
@@ -136,7 +130,7 @@ public class UsuarioService {
 
 
 
-    public String actualizar(Long id, Usuario datos, String nueva_password,String nuevo_email) {
+    public Usuario actualizar(Long id, Usuario datos, String nueva_password,String nuevo_email) {
         String str = "No se pudo actualizar.";
         Usuario usuario = usuarioRepo.findById(id).get();
         if (usuario.getPassword().equals(datos.getPassword())
@@ -148,10 +142,10 @@ public class UsuarioService {
             usuarioRepo.save(usuario);
             str = "Usuario actualizado.";
         }
-        return str;
+        return usuario;
     }
 
-    public String actualizarActivarDesactivar(Long id,Long id_admin, Usuario datos, boolean activar) {
+    public Usuario actualizarActivarDesactivar(Long id,Long id_admin, Usuario datos, boolean activar) {
         Usuario usuario = usuarioRepo.findById(id).get();
         Usuario admin = usuarioRepo.findById(id_admin).get();
 
@@ -161,7 +155,7 @@ public class UsuarioService {
             usuario.setActivo(activar);
             usuarioRepo.save(usuario);
         }
-        return "Usuario actualizado.";
+        return usuario;
     }
 
 }

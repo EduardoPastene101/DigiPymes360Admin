@@ -1,21 +1,18 @@
 package Microservicio.de.Administracion.del.Sistema.controller;
 
+import Microservicio.de.Administracion.del.Sistema.assembler.UsuarioModelAssembler;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
 import Microservicio.de.Administracion.del.Sistema.service.AdminService;
 import Microservicio.de.Administracion.del.Sistema.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,9 +33,12 @@ public class UsuarioControllerTest {
     private ObjectMapper objectMapper;
 
     private Usuario admin,usuario;
+
     @MockBean
     private UsuarioService usuarioService;
 
+    @MockBean
+    private UsuarioModelAssembler assembler;
     @BeforeEach
     void setUp() {
         admin = new Usuario();
@@ -57,31 +57,39 @@ public class UsuarioControllerTest {
 
     @Test
     public void testAddUsuario() throws Exception {
+        when(usuarioService.crearUsuario(any(Usuario.class), anyString(), anyString()))
+                .thenReturn(usuario);
 
+        when(assembler.toModel(any(Usuario.class)))
+                .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
-        mockMvc.perform(post("/api/v1/user/add")
+        mockMvc.perform(post("/api/v2/user/add")
                         .param("direccion", "calle 123")
                         .param("telefono", "12345")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(admin)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
     }
 
     @Test
     public void testGetUsuarios() throws Exception {
         when(usuarioService.findAll()).thenReturn(List.of(new Usuario()));
+        when(assembler.toModel(any(Usuario.class)))
+                .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
-        mockMvc.perform(get("/api/v1/user/get"))
+        mockMvc.perform(get("/api/v2/user/get"))
                 .andExpect(status().isOk());
 
     }
 
     @Test
     public void testGetById() throws Exception {
-        when(usuarioService.obtenerPorId(1L)).thenReturn(admin.toString());
+        when(usuarioService.obtenerPorId(1L)).thenReturn(usuario);
+        when(assembler.toModel(any(Usuario.class)))
+                .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
-        mockMvc.perform(get("/api/v1/user/getbyid")
+        mockMvc.perform(get("/api/v2/user/getbyid")
                 .param("id","1")
                 )
                 .andExpect(status().isOk());
@@ -90,10 +98,11 @@ public class UsuarioControllerTest {
 
     @Test
     public void testModificarUsuario() throws Exception {
-        when(usuarioService.actualizar(2L,admin,"pass123","pat.braun@gmail.com")).thenReturn(admin.toString());
-
+        when(usuarioService.actualizar(2L,admin,"pass123","pat.braun@gmail.com")).thenReturn(usuario);
+        when(assembler.toModel(any(Usuario.class)))
+                .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
-        mockMvc.perform(put("/api/v1/user/put")
+        mockMvc.perform(put("/api/v2/user/put")
                         .param("id","2")
                         .param("nuevo_email","pat.braun@gmail.com")
                         .param("nueva_password","pass123")
@@ -106,9 +115,11 @@ public class UsuarioControllerTest {
 
     @Test
     public void testModificarUsuarioActivarDesactivar() throws Exception {
-        when(usuarioService.actualizarActivarDesactivar(2L,1L,admin,false)).thenReturn(admin.toString());
+        when(usuarioService.actualizarActivarDesactivar(2L,1L,admin,false)).thenReturn(usuario);
+        when(assembler.toModel(any(Usuario.class)))
+                .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
-        mockMvc.perform(put("/api/v1/user/deactivate")
+        mockMvc.perform(put("/api/v2/user/deactivate")
                         .param("id","2")
                         .param("id_admin","1")
                         .param("activar","0")
@@ -121,26 +132,25 @@ public class UsuarioControllerTest {
 
     @Test
     public void testEliminarUsuario() throws Exception {
-        //doNothing().when(usuarioService).eliminarUsuario(2L,1L,admin);//Lo tiene en string, así que el donothing no sirve
-        mockMvc.perform(delete("/api/v1/user/del")
+
+        mockMvc.perform(delete("/api/v2/user/del")
                         .param("id","2")
                         .param("id_admin","1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(admin))
                 )
-                .andExpect(status().isOk());
-        //verify(usuarioService, times(1)).eliminarUsuario(2L,1L,admin);
+                .andExpect(status().isNoContent());
+
     }
 
     @Test
     public void testEliminarUsuarioVoluntariamente() throws Exception {
-        //doNothing().when(usuarioService).eliminarVoluntariamente(2L,usuario);//Lo tiene en string, así que el donothing no sirve
-        mockMvc.perform(delete("/api/v1/user/delself")
+        mockMvc.perform(delete("/api/v2/user/delself")
                         .param("id","2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuario))
                 )
-                .andExpect(status().isOk());
-        //verify(usuarioService, times(1)).eliminarVoluntariamente(2L,usuario);
+                .andExpect(status().isNoContent());
+
     }
 }
