@@ -26,7 +26,7 @@ public class IntegracionControllerTest {
     }
 
     @Test
-    public void testCambiarPermisos() throws Exception {
+    public void testIntegracion() throws Exception {
         // Ejecutar petición
         mockMvc.perform(get("/listarFactura")
                         .contentType(MediaType.APPLICATION_JSON))
