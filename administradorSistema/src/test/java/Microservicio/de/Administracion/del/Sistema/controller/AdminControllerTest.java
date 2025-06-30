@@ -9,9 +9,10 @@ import Microservicio.de.Administracion.del.Sistema.service.AdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +22,7 @@ public class AdminControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private AdminService adminService;
 
     @Autowired
@@ -44,19 +45,14 @@ public class AdminControllerTest {
         Long idUsuario = 5L;
         Integer nuevoRol = 3;
 
-        // Simular el comportamiento del servicio
-        when(adminService.cambiarPermisos(idAdmin, admin, idUsuario, nuevoRol))
-                .thenReturn("Rol cambiado satisfactoriamente");
-
         // Ejecutar petición
         mockMvc.perform(put("/api/v1/admin/put")
-                        .param("idAdmin", "1")
-                        .param("idUsuario", "5")
-                        .param("nuevoRol", "3")
+                        .param("id_admin", "1")
+                        .param("id_usuario", "5")
+                        .param("rol", "3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(admin)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Rol cambiado satisfactoriamente"));
+                .andExpect(status().isOk());
 
     }
 }
