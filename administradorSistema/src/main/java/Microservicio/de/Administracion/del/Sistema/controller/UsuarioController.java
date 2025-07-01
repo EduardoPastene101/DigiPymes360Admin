@@ -75,14 +75,14 @@ public class UsuarioController {
     @DeleteMapping(value = "/del",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Elimina usuarios.")
     public ResponseEntity<?> eliminarUsuario(@RequestParam Long id, @RequestParam Long id_admin, @RequestBody Usuario admin) {
-        this.usuarioService.eliminarUsuario(id,id_admin, admin);
+        usuarioService.eliminarUsuario(id,id_admin, admin);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/delself",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Elimina usuario cuando el usuario quiera eliminarse.")
     public ResponseEntity<?> eliminarUsuarioVoluntariamente(@RequestParam Long id, @RequestBody Usuario usuario) {
-        this.usuarioService.eliminarVoluntariamente(id,usuario);
+        usuarioService.eliminarVoluntariamente(id,usuario);
         return ResponseEntity.noContent().build();
 
     }

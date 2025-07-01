@@ -41,7 +41,7 @@ public class SoporteServiceTest {
     //Faker faker = new Faker();
 
     @Test
-    public void testgetAllSoportes(){
+    public void testGetAllSoportes(){
         when(soporteRepository.findAll()).thenReturn(List.of(new Soporte()));
         List<Soporte> soportes = soporteService.getTickets();
         assertNotNull(soportes);

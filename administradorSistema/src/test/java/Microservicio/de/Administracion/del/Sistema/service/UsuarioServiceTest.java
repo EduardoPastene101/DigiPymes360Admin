@@ -24,7 +24,7 @@ public class UsuarioServiceTest {
 
     Faker faker = new Faker();
     @Test
-    public void testfindAll(){
+    public void testFindAll(){
         when(usuarioRepository.findAll()).thenReturn(List.of(new Usuario()));
         List<Usuario> usuarios = usuarioService.findAll();
         assertNotNull(usuarios);
