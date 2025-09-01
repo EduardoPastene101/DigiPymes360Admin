@@ -86,4 +86,10 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
 
     }
+
+    @GetMapping(value = "/loginDP360")
+    @Operation(summary = "Log in")
+    public boolean loginDP360(@RequestParam String email, @RequestParam String password) {
+        return this.usuarioService.loginDP360(email,password);
+    }
 }

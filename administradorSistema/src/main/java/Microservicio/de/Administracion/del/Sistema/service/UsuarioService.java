@@ -36,6 +36,8 @@ public class UsuarioService {
 
     }
 
+
+
     public Usuario obtenerPorId(Long id) {
         String ret = "Permiso denegado.";
         Usuario u = usuarioRepo.findById(id).get();
@@ -97,7 +99,23 @@ public class UsuarioService {
         return ret;
     }
 
+    public boolean loginDP360(String email, String password) {
 
+        List<Usuario> usuarios =  usuarioRepo.findAll();
+
+        boolean ret = false;
+        for (int i = 0;i < usuarios.size();i++){
+
+            Usuario obtenerUsuario = usuarios.get(i);
+
+            if (obtenerUsuario.getEmail().equals(email) && obtenerUsuario.getPassword().equals(password)) {
+                ret = true;
+            }
+        }
+
+        return ret;
+
+    }
 
     public String eliminarUsuario(Long id,Long id_admin, Usuario admin) {
         String ret = "No se puede eliminar el usuario.";
