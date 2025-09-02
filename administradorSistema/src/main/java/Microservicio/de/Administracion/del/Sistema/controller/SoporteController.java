@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v2/support/")
+@CrossOrigin(origins = "*")
 public class SoporteController {
     @Autowired
     private SoporteService soporteService;
