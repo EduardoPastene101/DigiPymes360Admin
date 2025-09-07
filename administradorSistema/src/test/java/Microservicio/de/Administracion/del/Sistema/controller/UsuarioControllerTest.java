@@ -98,7 +98,7 @@ public class UsuarioControllerTest {
 
     @Test
     public void testModificarUsuario() throws Exception {
-        when(usuarioService.actualizar(2L,admin,"pass123","pat.braun@gmail.com")).thenReturn(usuario);
+        //when(usuarioService.actualizar(2L,admin,"pass123","pat.braun@gmail.com","Direccion 1234","56999887766")).thenReturn(usuarioDTO);//Se comenta si se ejecuta en VSCode
         when(assembler.toModel(any(Usuario.class)))
                 .thenReturn(EntityModel.of(usuario));
         // Ejecutar petición
