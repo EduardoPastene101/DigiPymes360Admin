@@ -1,5 +1,6 @@
 package Microservicio.de.Administracion.del.Sistema.service;
 
+import Microservicio.de.Administracion.del.Sistema.DTO.UsuarioDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import Microservicio.de.Administracion.del.Sistema.model.Cliente;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
@@ -37,6 +38,35 @@ public class UsuarioService {
     }
 
 
+    public UsuarioDTO obtenerPorLogueo(String email, String password) {
+        Usuario usuario=new Usuario();
+        UsuarioDTO usuarioDTO=new UsuarioDTO();
+        List<Usuario> u = usuarioRepo.findAll();
+
+        int i = 0;
+        for(i=0;i<u.size();i++){
+            if(u.get(i).getEmail().equals(email) && u.get(i).getPassword().equals(password)){
+                usuario = u.get(i);
+            }
+        }
+        List<Cliente> clientes = clienteRepo.findAll();
+
+        for(i=0;i<clientes.size();i++){
+            if (clientes.get(i).getId_cliente()== usuario.getId_usuario()){
+                usuarioDTO.setId_usuario(clientes.get(i).getId_cliente());
+                usuarioDTO.setRol(usuario.getRol());
+                usuarioDTO.setNombre(usuario.getNombre());
+                usuarioDTO.setEmail(usuario.getEmail());
+                usuarioDTO.setPassword(usuario.getPassword());
+                usuarioDTO.setActivo(usuario.isActivo());
+                usuarioDTO.setDireccion(clientes.get(i).getDireccion());
+                usuarioDTO.setTelefono(clientes.get(i).getTelefono());
+            }
+        }
+
+        return usuarioDTO;
+
+    }
 
     public Usuario obtenerPorId(Long id) {
         String ret = "Permiso denegado.";
@@ -148,19 +178,43 @@ public class UsuarioService {
 
 
 
-    public Usuario actualizar(Long id, Usuario datos, String nueva_password,String nuevo_email) {
+    public UsuarioDTO actualizar(Long id, Usuario datos, String nueva_password,String nuevo_email,String nueva_direccion,String nuevo_telefono) {
         String str = "No se pudo actualizar.";
+        UsuarioDTO udto = new UsuarioDTO();
         Usuario usuario = usuarioRepo.findById(id).get();
         if (usuario.getPassword().equals(datos.getPassword())
-                && usuario.getEmail().equals(datos.getEmail())
-                && usuario.isActivo()) {
+                && usuario.getEmail().equals(datos.getEmail())){
+            //&& usuario.isActivo()) {
+
             usuario.setPassword(nueva_password);
             usuario.setEmail(nuevo_email);
             usuario.setNombre(datos.getNombre());
             usuarioRepo.save(usuario);
+
+            List<Cliente> lista_clientes = clienteRepo.findAll();
+            for (int i = 0; i< lista_clientes.size();i++){
+                if (lista_clientes.get(i).getId_usuario().getId_usuario().equals(usuario.getId_usuario())){
+                    lista_clientes.get(i).setDireccion(nueva_direccion);
+
+                    udto.setId_usuario(usuario.getId_usuario());
+                    udto.setRol(usuario.getRol());
+                    udto.setNombre(usuario.getNombre());
+                    udto.setEmail(usuario.getEmail());
+                    udto.setPassword(usuario.getPassword());
+                    udto.setActivo(usuario.isActivo());
+                    udto.setDireccion(nueva_direccion);
+                    udto.setTelefono(nuevo_telefono);
+
+                    lista_clientes.get(i).setDireccion(nueva_direccion);
+                    lista_clientes.get(i).setTelefono(nuevo_telefono);
+
+                    clienteRepo.save(lista_clientes.get(i));
+
+                }
+            }
             str = "Usuario actualizado.";
         }
-        return usuario;
+        return udto;
     }
 
     public Usuario actualizarActivarDesactivar(Long id,Long id_admin, Usuario datos, boolean activar) {

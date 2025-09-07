@@ -1,5 +1,6 @@
 package Microservicio.de.Administracion.del.Sistema.controller;
 
+import Microservicio.de.Administracion.del.Sistema.DTO.UsuarioDTO;
 import Microservicio.de.Administracion.del.Sistema.assembler.UsuarioModelAssembler;
 import Microservicio.de.Administracion.del.Sistema.model.Usuario;
 import Microservicio.de.Administracion.del.Sistema.service.UsuarioService;
@@ -60,10 +61,10 @@ public class UsuarioController {
 
     @PutMapping(value = "/put",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Modifica usuarios.")
-    public ResponseEntity<EntityModel<Usuario>> modificarUsuario(@RequestParam Long id,@RequestBody Usuario usuario, @RequestParam String nueva_password, @RequestParam String nuevo_email) {
-        Usuario usuarioRet= this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email);
-        return ResponseEntity
-                .ok(assembler.toModel(usuarioRet));
+    public UsuarioDTO modificarUsuario(@RequestParam Long id, @RequestBody Usuario usuario, @RequestParam String nueva_password, @RequestParam String nuevo_email, @RequestParam String direccion,@RequestParam String telefono) {
+        UsuarioDTO usuarioRet= this.usuarioService.actualizar(id,usuario,nueva_password,nuevo_email,direccion,telefono);
+        //return ResponseEntity.ok(assembler.toModel(usuarioRet));
+        return usuarioRet;
     }
 
     @PutMapping(value = "/deactivate",produces = MediaTypes.HAL_JSON_VALUE)
@@ -93,4 +94,11 @@ public class UsuarioController {
     public boolean loginDP360(@RequestParam String email, @RequestParam String password) {
         return this.usuarioService.loginDP360(email,password);
     }
+
+    @GetMapping(value = "/loginINFO")
+    @Operation(summary = "Log in info")
+    public UsuarioDTO loginINFO(@RequestParam String email, @RequestParam String password) {
+        return this.usuarioService.obtenerPorLogueo(email,password);
+    }
+
 }
