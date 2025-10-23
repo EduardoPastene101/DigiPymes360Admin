@@ -7,7 +7,9 @@ import Microservicio.de.Administracion.del.Sistema.model.Usuario;
 import Microservicio.de.Administracion.del.Sistema.repository.IClienteRepository;
 import Microservicio.de.Administracion.del.Sistema.repository.IUsuarioRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,36 +40,59 @@ public class UsuarioService {
     }
 
 
-    public UsuarioDTO obtenerPorLogueo(String email, String password) {
-        Usuario usuario=new Usuario();
-        UsuarioDTO usuarioDTO=new UsuarioDTO();
-        List<Usuario> u = usuarioRepo.findAll();
+        public ResponseEntity<UsuarioDTO> obtenerPorLogueo(String email, String password) {
+        try {
+            // Buscar usuario por email y password
+            Optional<Usuario> usuarioOpt = usuarioRepo.findByEmailAndPassword(email, password);
 
-        int i = 0;
-        for(i=0;i<u.size();i++){
-            if(u.get(i).getEmail().equals(email) && u.get(i).getPassword().equals(password)){
-                usuario = u.get(i);
+            if (usuarioOpt.isEmpty()) {
+                System.out.println("Usuario no encontrado para: " + email);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-        }
-        List<Cliente> clientes = clienteRepo.findAll();
 
-        for(i=0;i<clientes.size();i++){
-            if (clientes.get(i).getId_cliente()== usuario.getId_usuario()){
-                usuarioDTO.setId_usuario(clientes.get(i).getId_cliente());
-                usuarioDTO.setRol(usuario.getRol());
-                usuarioDTO.setNombre(usuario.getNombre());
-                usuarioDTO.setEmail(usuario.getEmail());
-                usuarioDTO.setPassword(usuario.getPassword());
-                usuarioDTO.setActivo(usuario.isActivo());
-                usuarioDTO.setDireccion(clientes.get(i).getDireccion());
-                usuarioDTO.setTelefono(clientes.get(i).getTelefono());
+            Usuario usuario = usuarioOpt.get();
+
+            // Buscar cliente asociado al usuario (aquí asumo que comparten el mismo ID)
+            Optional<Cliente> clienteOpt = clienteRepo.findById(usuario.getId_usuario().longValue());
+
+            if (clienteOpt.isEmpty()) {
+                System.out.println("Cliente no encontrado para ID de usuario: " + usuario.getId_usuario());
+                // Creamos un DTO solo con datos del usuario (sin dirección ni teléfono)
+                UsuarioDTO dto = new UsuarioDTO();
+                dto.setId_usuario(usuario.getId_usuario());
+                dto.setRol(usuario.getRol());
+                dto.setNombre(usuario.getNombre());
+                dto.setEmail(usuario.getEmail());
+                dto.setPassword(usuario.getPassword());
+                dto.setActivo(usuario.isActivo());
+                dto.setDireccion("No registrada");
+                dto.setTelefono("No registrado");
+
+                return ResponseEntity.ok(dto);
             }
+
+            Cliente cliente = clienteOpt.get();
+
+            // Si encontramos ambos, armamos el DTO completo
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            usuarioDTO.setId_usuario(usuario.getId_usuario());
+            usuarioDTO.setRol(usuario.getRol());
+            usuarioDTO.setNombre(usuario.getNombre());
+            usuarioDTO.setEmail(usuario.getEmail());
+            usuarioDTO.setPassword(usuario.getPassword());
+            usuarioDTO.setActivo(usuario.isActivo());
+            usuarioDTO.setDireccion(cliente.getDireccion());
+            usuarioDTO.setTelefono(cliente.getTelefono());
+
+            System.out.println("Usuario logueado correctamente: " + usuario.getEmail());
+            return ResponseEntity.ok(usuarioDTO);
+
+        } catch (Exception e) {
+            System.err.println("Error al obtener usuario: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-
-        return usuarioDTO;
-
     }
-
     public Usuario obtenerPorId(Long id) {
         String ret = "Permiso denegado.";
         Usuario u = usuarioRepo.findById(id).get();

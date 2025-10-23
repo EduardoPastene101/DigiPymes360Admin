@@ -97,8 +97,9 @@ public class UsuarioController {
 
     @GetMapping(value = "/loginINFO")
     @Operation(summary = "Log in info")
-    public UsuarioDTO loginINFO(@RequestParam String email, @RequestParam String password) {
-        return this.usuarioService.obtenerPorLogueo(email,password);
+    public ResponseEntity<UsuarioDTO> loginINFO(@RequestParam String email, @RequestParam String password) {
+        return this.usuarioService.obtenerPorLogueo(email, password);
     }
+
 
 }
