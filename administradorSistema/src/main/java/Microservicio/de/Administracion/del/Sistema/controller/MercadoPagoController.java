@@ -5,16 +5,18 @@ import Microservicio.de.Administracion.del.Sistema.service.MercadoPagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/pagos")
+@RequestMapping("/api/pago")
 @CrossOrigin("*")
 public class MercadoPagoController {
 
     @Autowired
     private MercadoPagoService mercadoPagoService;
 
-    @PostMapping("/crear-preferencia")
-    public String crearPreferencia(@RequestBody CreatePreferenceRequest req) throws Exception {
+    @PostMapping("/preferencia")
+    public Map<String, Object> crearPreferencia(@RequestBody CreatePreferenceRequest req) throws Exception {
         return mercadoPagoService.crearPreferencia(req);
     }
 }
